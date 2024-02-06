@@ -1,16 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using NMAS.WebApi.Host.Configurations;
-using Ondato.Infrastructure.WebApi.Extensions.Configurations;
-using Ondato.Infrastructure.WebApi.Middleware.Builder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NMAS
 {
@@ -24,10 +17,24 @@ namespace NMAS
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
-        // This method gets called by the runtime. Use this method to add services to the container.
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureStandardWebApi();
+            // Add API Versioning to the service collection
+            services.AddApiVersioning(options =>
+            {
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            services.AddControllers();
             services.ConfigureDependencyInjection(Configuration, Environment);
             services.ConfigureSwagger(Configuration);
         }
@@ -35,11 +42,11 @@ namespace NMAS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCorrelationIdMiddleware();
-            app.UseExceptionHandlingMiddleware(options =>
-            {
-                options.UseDeveloperExceptionPage = env.IsEnvironment("Test") || env.IsDevelopment();
-            });
+            //app.UseCorrelationIdMiddleware(); //todo implemnt correcalionIdHandling
+            //app.UseExceptionHandlingMiddleware(options =>
+            //{
+            //    options.UseDeveloperExceptionPage = env.IsEnvironment("Test") || env.IsDevelopment();
+            //});
             app.UseRouting();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>

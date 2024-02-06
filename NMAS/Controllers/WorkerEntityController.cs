@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Client;
+using NMAS.WebApi.Contracts.Response;
 using NMAS.WebApi.Contracts.WorkerEntity;
-using Ondato.Infrastructure.WebApi.Contracts.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
