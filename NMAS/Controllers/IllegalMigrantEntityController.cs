@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Client;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
+using NMAS.WebApi.Contracts.Response;
 using NMAS.WebApi.Services.IllegalMigrantEntity;
-using Ondato.Infrastructure.WebApi.Contracts.Responses;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
@@ -54,7 +54,7 @@ namespace NMAS.WebApi.Host.Controllers
         public async Task<IActionResult> Update(int id, [FromBody] IllegalMigrantEntity updateIllegalMigrantEntity)
         {
             //var illegalMigrantEntityUpdated = await _illegalMigrantEntityService.InsertAsync(id, updateIllegalMigrantEntity);
-            var illegalMigrantEntityUpdated=1;
+            var illegalMigrantEntityUpdated = 1;
             return Ok(illegalMigrantEntityUpdated);
         }
 

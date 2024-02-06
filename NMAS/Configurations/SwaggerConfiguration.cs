@@ -4,10 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Host.Configurations
 {
@@ -18,11 +14,11 @@ namespace NMAS.WebApi.Host.Configurations
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                    var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-                    foreach(var description in provider.ApiVersionDescriptions)
-                    {
-                        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
-                    }
+                var provider = app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"API {description.ApiVersion}");
+                }
             });
         }
 
@@ -30,18 +26,9 @@ namespace NMAS.WebApi.Host.Configurations
         {
             services.AddSwaggerGen(c =>
             {
-                var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-                foreach(var description in provider.ApiVersionDescriptions)
-                {
-                    c.SwaggerDoc(description.GroupName, new OpenApiInfo
-                    {
-                        Title = configuration.GetValue<string>("Swagger:Title"),
-                        Version = description.GroupName
-                    });
-                }
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Illegal Migrant API", Version = "v1" });
                 c.OperationFilter<AddResponseHeadersFilter>();
             });
-            
         }
     }
 }

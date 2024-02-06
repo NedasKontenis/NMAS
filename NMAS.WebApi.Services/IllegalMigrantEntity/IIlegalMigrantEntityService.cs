@@ -17,9 +17,9 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
         public async Task<IllegalMigrantEntityCreated> InsertAsync(Client.IllegalMigrantEntity illegalMigrantEntity)
         {
             var document = illegalMigrantEntity.Map();
-            await _illegalMigrantEntityRepository.CreateAsync(document);
+            var illegalMigrantEntityCreatedId = await _illegalMigrantEntityRepository.CreateAsync(document);
 
-            return new IllegalMigrantEntityCreated();
+            return new IllegalMigrantEntityCreated(illegalMigrantEntityCreatedId);
         }
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Client;
 using NMAS.WebApi.Contracts.AccomodationPlaceEntity;
-using Ondato.Infrastructure.WebApi.Contracts.Responses;
+using NMAS.WebApi.Contracts.Response;
 using System.Net.Mime;
 using System.Threading.Tasks;
 
