@@ -6,7 +6,7 @@ namespace NMAS.WebApi.Client
     public class IllegalMigrantEntity
     {
         [Required]
-        public int AccomodationPlaceID { get; set; }
+        public int AccommodationPlaceID { get; set; }
         [Required]
         public string PersonalIdentityCode { get; set; }
         [Required]
