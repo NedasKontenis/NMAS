@@ -1,6 +1,6 @@
 ﻿namespace NMAS.WebApi.Contracts.IllegalMigrantEntity
 {
-    public class IllegalMigrantEntityUpdated
+    public class IllegalMigrantEntity : ModifiableIllegalMigrantEntity
     {
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Client;
 using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
-using NMAS.WebApi.Contracts.Response;
+using NMAS.WebApi.Contracts.Responses;
 using System.Net.Mime;
 using System.Threading.Tasks;
 

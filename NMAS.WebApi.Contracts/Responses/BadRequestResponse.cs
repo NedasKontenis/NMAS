@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace NMAS.WebApi.Contracts.Response
+namespace NMAS.WebApi.Contracts.Responses
 {
-    public class BadRequestResponse : BaseResponse
+    public class BadRequestResponse
     {
+        public string Message { get; set; }
         public List<string> Errors { get; set; }
 
         public BadRequestResponse(string message, List<string> errors = null)
-            : base(false, message)
         {
+            Message = message;
             Errors = errors ?? new List<string>();
         }
     }

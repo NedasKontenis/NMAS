@@ -5,6 +5,12 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
 {
     public interface IIllegalMigrantEntityService
     {
-        Task<IllegalMigrantEntityCreated> InsertAsync(Client.IllegalMigrantEntity illegalMigrantEntity);
+        Task<IllegalMigrantEntityCreated> CreateAsync(CreateIllegalMigrantEntity createIllegalMigrantEntity);
+
+        Task<Contracts.IllegalMigrantEntity.IllegalMigrantEntity> GetAsync(int id);
+
+        Task UpdateAsync(int id, UpdateIllegalMigrantEntity updateIllegalMigrantEntity);
+
+        Task DeleteAsync(int id);
     }
 }
