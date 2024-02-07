@@ -1,9 +1,8 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using NMAS.WebApi.Client;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
-using NMAS.WebApi.Contracts.Response;
+using NMAS.WebApi.Contracts.Responses;
 using NMAS.WebApi.Services.IllegalMigrantEntity;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -26,23 +25,32 @@ namespace NMAS.WebApi.Host.Controllers
         /// Creates new illegal migrant entity
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(IllegalMigrantEntityCreated), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IllegalMigrantEntityCreated), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] IllegalMigrantEntity createIllegalMigrantEntity)
+        public async Task<IActionResult> Create([FromBody] CreateIllegalMigrantEntity createIllegalMigrantEntity)
         {
-            var illegalMigrantEntityCreated = await _illegalMigrantEntityService.InsertAsync(createIllegalMigrantEntity);
-            return Ok(illegalMigrantEntityCreated);
+            var illegalMigrantEntityCreated = await _illegalMigrantEntityService.CreateAsync(createIllegalMigrantEntity);
+
+            return CreatedAtAction(
+            nameof(Get),
+            new
+            {
+                illegalMigrantEntityCreated.Id
+            },
+            illegalMigrantEntityCreated);
         }
 
         /// <summary>
         /// Return details of a single illegal migrant entity
         /// </summary>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(IllegalMigrantEntityUpdated), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IllegalMigrantEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
-            var illegalMigrantEntity = 1;
+            var illegalMigrantEntity = await _illegalMigrantEntityService.GetAsync(id);
+
             return Ok(illegalMigrantEntity);
         }
 
@@ -50,26 +58,27 @@ namespace NMAS.WebApi.Host.Controllers
         /// Updates illegal migrant entity
         /// </summary>
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(IllegalMigrantEntityUpdated), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, [FromBody] IllegalMigrantEntity updateIllegalMigrantEntity)
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateIllegalMigrantEntity updateIllegalMigrantEntity)
         {
-            //var illegalMigrantEntityUpdated = await _illegalMigrantEntityService.InsertAsync(id, updateIllegalMigrantEntity);
-            var illegalMigrantEntityUpdated = 1;
-            return Ok(illegalMigrantEntityUpdated);
+            await _illegalMigrantEntityService.UpdateAsync(id, updateIllegalMigrantEntity);
+
+            return NoContent();
         }
 
         /// <summary>
         /// Deletes illegal migrant entity
         /// </summary>
         [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(IllegalMigrantEntityUpdated), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            //var illegalMigrantEntityUpdated = await _illegalMigrantEntityService.InsertAsync(id, updateIllegalMigrantEntity);
-            var illegalMigrantEntityDeleted = 1;
-            return Ok(illegalMigrantEntityDeleted);
+            await _illegalMigrantEntityService.DeleteAsync(id);
+
+            return NoContent();
         }
     }
 }

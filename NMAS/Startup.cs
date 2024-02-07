@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NMAS.WebApi.Host.Configurations;
+using NMAS.WebApi.Host.Middlewares;
 
 namespace NMAS
 {
@@ -41,6 +42,7 @@ namespace NMAS
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //app.UseCorrelationIdMiddleware(); //todo implemnt correcalionIdHandling
+            app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>

@@ -26,7 +26,31 @@ namespace NMAS.WebApi.Repositories.IllegalMigrantEntity
                 {
                     throw new Exception(ex.ToString());
                 }
-            } 
+            }
+        }
+
+        public async Task<IllegalMigrantEntityDocument> GetAsync(int id)
+        {
+            using (var db = await OpenAsync())
+            {
+                return await GetAsync<IllegalMigrantEntityDocument>(db, IllegalMigrantTable, id);
+            }
+        }
+
+        public async Task UpdateAsync(int id, IllegalMigrantEntityDocument document)
+        {
+            using (var db = await OpenAsync())
+            {
+                await UpdateAsync(db, IllegalMigrantTable, id, document);
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            using (var db = await OpenAsync())
+            {
+                await DeleteAsync(db, IllegalMigrantTable, id);
+            }
         }
     }
 }
