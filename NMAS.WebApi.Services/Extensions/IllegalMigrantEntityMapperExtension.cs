@@ -13,7 +13,7 @@ namespace NMAS.WebApi.Services.Extensions
 
             var illegalMigantEntityDocument = new IllegalMigrantEntityDocument
             {
-                AccomodationPlaceID = source.AccomodationPlaceID,
+                AccommodationPlaceID = source.AccommodationPlaceID,
                 PersonalIdentityCode = source.PersonalIdentityCode,
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,

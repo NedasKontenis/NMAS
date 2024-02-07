@@ -2,7 +2,7 @@
 
 namespace NMAS.WebApi.Client
 {
-    public class AccomodationPlaceEntity
+    public class AccommodationPlaceEntity
     {
         [Required]
         public int WorkerID { get; set; }
@@ -11,9 +11,9 @@ namespace NMAS.WebApi.Client
         [Required]
         public string Adress { get; set; }
         [Required]
-        public int AccomodationCapacity { get; set; }
+        public int AccommodationCapacity { get; set; }
         [Required]
-        public int UsedAccomodationCapacity { get; set; }
+        public int UsedAccommodationCapacity { get; set; }
         [Required]
         public string CompanyCode { get; set; }
         [Required]

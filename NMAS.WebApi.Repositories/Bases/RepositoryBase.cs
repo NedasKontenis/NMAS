@@ -25,12 +25,12 @@ namespace NMAS.WebApi.Repositories.Bases
         protected Task<int> InsertAsync<T>(IDbConnection db, string tableName, T document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         where T : IllegalMigrantEntityDocument
         {
-            var sql = $@"INSERT INTO {tableName}([AccomodationPlaceID],[PersonalIdentityCode],[FirstName],[MiddleName],[LastName],[Gender],[DateOfBirth],[OriginCountry],[Religion]) 
-                       VALUES (@AccomodationPlaceID, @PersonalIdentityCode, @FirstName, @MiddleName, @LastName, @Gender, @DateOfBirth, @OriginCountry, @Religion)";
+            var sql = $@"INSERT INTO {tableName}([AccommodationPlaceID],[PersonalIdentityCode],[FirstName],[MiddleName],[LastName],[Gender],[DateOfBirth],[OriginCountry],[Religion]) 
+                       VALUES (@AccommodationPlaceID, @PersonalIdentityCode, @FirstName, @MiddleName, @LastName, @Gender, @DateOfBirth, @OriginCountry, @Religion)";
 
             return db.ExecuteAsync(sql, new
             {
-                document.AccomodationPlaceID,
+                document.AccommodationPlaceID,
                 document.PersonalIdentityCode,
                 document.FirstName,
                 document.MiddleName,
