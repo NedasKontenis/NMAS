@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using NMAS.WebApi.Repositories.Models.IllegalMigrantEntity;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -23,30 +23,22 @@ namespace NMAS.WebApi.Repositories.Bases
             return db;
         }
 
-        protected async Task<int> InsertAsync<T>(IDbConnection db, string tableName, T document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
-        where T : IllegalMigrantEntityDocument
+        protected async Task<int> InsertAsync(IDbConnection db, string tableName, object document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var sql = $@"INSERT INTO {tableName}([AccommodationPlaceID],[PersonalIdentityCode],[FirstName],[MiddleName],[LastName],[Gender],[DateOfBirth],[OriginCountry],[Religion]) 
-                 VALUES (@AccommodationPlaceID, @PersonalIdentityCode, @FirstName, @MiddleName, @LastName, @Gender, @DateOfBirth, @OriginCountry, @Religion);
+            var properties = document.GetType().GetProperties();
+            var columnNames = string.Join(", ", properties.Select(p => $"[{p.Name}]"));
+            var valueNames = string.Join(", ", properties.Select(p => $"@{p.Name}"));
+
+            var sql = $@"INSERT INTO {tableName} ({columnNames}) 
+                 VALUES ({valueNames});
                  SELECT CAST(SCOPE_IDENTITY() as int);";
 
-            int id = await db.QuerySingleAsync<int>(sql, new
-            {
-                document.AccommodationPlaceID,
-                document.PersonalIdentityCode,
-                document.FirstName,
-                document.MiddleName,
-                document.LastName,
-                document.Gender,
-                document.DateOfBirth,
-                document.OriginCountry,
-                document.Religion
-            }, transaction, commandTimeout, commandType);
+            int id = await db.QuerySingleAsync<int>(sql, document, transaction, commandTimeout, commandType);
 
             return id;
         }
 
-        protected async Task<IllegalMigrantEntityDocument> GetAsync<T>(IDbConnection db, string tableName, int id, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null) where T : class
+        protected async Task<T> GetAsync<T>(IDbConnection db, string tableName, int id, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
             var sql = $@"SELECT * FROM {tableName} WHERE [Id] = @Id";
 
@@ -54,36 +46,28 @@ namespace NMAS.WebApi.Repositories.Bases
             {
                 Id = id
             }, transaction, commandTimeout, commandType);
-            return result.FirstOrDefault() as IllegalMigrantEntityDocument;
+            return result.FirstOrDefault();
         }
 
-        protected async Task UpdateAsync(IDbConnection db, string tableName, int id, IllegalMigrantEntityDocument document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        protected async Task UpdateAsync<T>(IDbConnection db, string tableName, int id, T document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var sql = $@"UPDATE {tableName} 
-                         SET AccommodationPlaceID = @AccommodationPlaceID,
-                             PersonalIdentityCode = @PersonalIdentityCode,
-                             FirstName = @FirstName,
-                             MiddleName = @MiddleName,
-                             LastName = @LastName,
-                             Gender = @Gender,
-                             DateOfBirth = @DateOfBirth,
-                             OriginCountry = @OriginCountry,
-                             Religion = @Religion
-                         WHERE ID = @Id";
-
-            await db.ExecuteAsync(sql, new
+            var properties = typeof(T).GetProperties().Where(prop => prop.Name != "Id");
+            var setClauses = new List<string>();
+            foreach (var prop in properties)
             {
-                document.AccommodationPlaceID,
-                document.PersonalIdentityCode,
-                document.FirstName,
-                document.MiddleName,
-                document.LastName,
-                document.Gender,
-                document.DateOfBirth,
-                document.OriginCountry,
-                document.Religion,
-                Id = id
-            }, transaction, commandTimeout, commandType);
+                setClauses.Add($"{prop.Name} = @{prop.Name}");
+            }
+            var setClause = string.Join(", ", setClauses);
+            var sql = $@"UPDATE {tableName} SET {setClause} WHERE ID = @Id";
+
+            var parameters = new DynamicParameters();
+            foreach (var prop in properties)
+            {
+                parameters.Add($"@{prop.Name}", prop.GetValue(document));
+            }
+            parameters.Add("@Id", id);
+
+            await db.ExecuteAsync(sql, parameters, transaction, commandTimeout, commandType);
         }
 
         protected async Task DeleteAsync(IDbConnection db, string tableName, int id, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)

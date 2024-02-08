@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NMAS.WebApi.Repositories;
+using NMAS.WebApi.Repositories.AccommodationPlaceEntity;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
+using NMAS.WebApi.Services.AccommodationPlaceEntityService;
 using NMAS.WebApi.Services.IllegalMigrantEntity;
 
 namespace NMAS.WebApi.Host.Configurations
@@ -18,6 +20,9 @@ namespace NMAS.WebApi.Host.Configurations
 
             services.AddTransient<IIllegalMigrantEntityRepository, IllegalMigrantEntityRepository>();
             services.AddTransient<IIllegalMigrantEntityService, IllegalMigrantEntityService>();
+
+            services.AddTransient<IAccommodationPlaceEntityRepository, AccommodationPlaceEntityRepository>();
+            services.AddTransient<IAccommodationPlaceEntityService, AccommodationPlaceEntityService>();
         }
     }
 }
