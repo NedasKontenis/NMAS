@@ -51,7 +51,7 @@ namespace NMAS.WebApi.Repositories.Bases
 
         protected async Task UpdateAsync<T>(IDbConnection db, string tableName, int id, T document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var properties = typeof(T).GetProperties().Where(prop => prop.Name != "Id");
+            var properties = typeof(T).GetProperties().Where(prop => prop.Name != "ID");
             var setClauses = new List<string>();
             foreach (var prop in properties)
             {
@@ -78,6 +78,14 @@ namespace NMAS.WebApi.Repositories.Bases
             {
                 Id = id
             }, transaction, commandTimeout, commandType);
+        }
+
+        protected async Task<IEnumerable<T>> GetAllAsync<T>(IDbConnection db, string tableName, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
+        {
+            var sql = $@"SELECT * FROM {tableName}";
+
+            var result = await db.QueryAsync<T>(sql, transaction: transaction, commandTimeout: commandTimeout, commandType: commandType);
+            return result;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
 using NMAS.WebApi.Contracts.AccomodationPlaceEntity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
@@ -17,5 +18,7 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         Task IncrementUsedAccommodationCapacity(int accommodationPlaceId);
 
         Task DecrementUsedAccommodationCapacity(int accommodationPlaceId);
+
+        Task<IEnumerable<AccommodationPlaceEntity>> GetAllAccommodationPlacesAsync();
     }
 }

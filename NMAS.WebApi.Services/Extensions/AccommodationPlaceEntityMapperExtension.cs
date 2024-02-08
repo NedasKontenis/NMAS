@@ -35,6 +35,7 @@ namespace NMAS.WebApi.Services.Extensions
 
             return new AccommodationPlaceEntity
             {
+                Id = source.ID,
                 WorkerID = source.WorkerID,
                 PlaceName = source.PlaceName,
                 Adress = source.Adress,

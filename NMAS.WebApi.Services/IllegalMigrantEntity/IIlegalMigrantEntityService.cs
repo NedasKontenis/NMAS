@@ -3,6 +3,7 @@ using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
 using NMAS.WebApi.Services.AccommodationPlaceEntityService;
 using NMAS.WebApi.Services.Extensions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Services.IllegalMigrantEntity
@@ -88,6 +89,37 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
             }
 
             await _illegalMigrantEntityRepository.DeleteAsync(id);
+        }
+
+        public async Task AssignAsync(int id)
+        {
+            var illegalMigrantEntityDocument = await _illegalMigrantEntityRepository.GetAsync(id);
+
+            if (illegalMigrantEntityDocument == null)
+            {
+                throw new ResourceNotFoundException("Illegal migrant entity not found");
+            }
+
+            if (illegalMigrantEntityDocument.AccommodationPlaceID.HasValue)
+            {
+                throw new BadRequestException("Illegal migrant is already assigned to an accommodation place");
+            }
+
+            var accommodationPlaces = await _accommodationPlaceEntityService.GetAllAccommodationPlacesAsync();
+
+            var availableAccommodationPlace = accommodationPlaces
+                .FirstOrDefault(place => place.UsedAccommodationCapacity < place.AccommodationCapacity);
+
+            if (availableAccommodationPlace == null)
+            {
+                throw new BadRequestException("No accommodation places with available capacity");
+            }
+
+            illegalMigrantEntityDocument.AccommodationPlaceID = availableAccommodationPlace.Id;
+            await _illegalMigrantEntityRepository.UpdateAsync(id, illegalMigrantEntityDocument);
+
+            availableAccommodationPlace.UsedAccommodationCapacity += 1;
+            await _accommodationPlaceEntityService.IncrementUsedAccommodationCapacity(availableAccommodationPlace.Id);
         }
     }
 }

@@ -80,5 +80,19 @@ namespace NMAS.WebApi.Host.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Assigns illegal migrant entity to an accommodation place
+        /// </summary>
+        [HttpPut("{id}/assign")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Assign(int id)
+        {
+            await _illegalMigrantEntityService.AssignAsync(id);
+
+            return NoContent();
+        }
     }
 }
