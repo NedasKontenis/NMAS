@@ -1,6 +1,7 @@
 ﻿using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
+using NMAS.WebApi.Services.AccommodationPlaceEntityService;
 using NMAS.WebApi.Services.Extensions;
 using System.Threading.Tasks;
 
@@ -9,16 +10,24 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
     public class IllegalMigrantEntityService : IIllegalMigrantEntityService
     {
         private readonly IIllegalMigrantEntityRepository _illegalMigrantEntityRepository;
+        private readonly IAccommodationPlaceEntityService _accommodationPlaceEntityService;
 
-        public IllegalMigrantEntityService(IIllegalMigrantEntityRepository illegalMigrantEntityRepository)
+        public IllegalMigrantEntityService(IIllegalMigrantEntityRepository illegalMigrantEntityRepository,
+            IAccommodationPlaceEntityService accommodationPlaceEntityService)
         {
             _illegalMigrantEntityRepository = illegalMigrantEntityRepository;
+            _accommodationPlaceEntityService = accommodationPlaceEntityService;
         }
 
         public async Task<IllegalMigrantEntityCreated> CreateAsync(CreateIllegalMigrantEntity createIllegalMigrantEntity)
         {
             var document = createIllegalMigrantEntity.Map();
             var createdIllegalMigrantEntityId = await _illegalMigrantEntityRepository.CreateAsync(document);
+
+            if (createIllegalMigrantEntity.AccommodationPlaceID.HasValue)
+            {
+                await _accommodationPlaceEntityService.IncrementUsedAccommodationCapacity(createIllegalMigrantEntity.AccommodationPlaceID.Value);
+            }
 
             return new IllegalMigrantEntityCreated
             {
@@ -47,6 +56,20 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
                 throw new ResourceNotFoundException("Illegal migrant entity not found");
             }
 
+            if (illegalMigrantEntityDocument.AccommodationPlaceID.HasValue &&
+                (!updateIllegalMigrantEntity.AccommodationPlaceID.HasValue ||
+                 updateIllegalMigrantEntity.AccommodationPlaceID.Value != illegalMigrantEntityDocument.AccommodationPlaceID.Value))
+            {
+                await _accommodationPlaceEntityService.DecrementUsedAccommodationCapacity(illegalMigrantEntityDocument.AccommodationPlaceID.Value);
+            }
+
+            if (updateIllegalMigrantEntity.AccommodationPlaceID.HasValue &&
+                (!illegalMigrantEntityDocument.AccommodationPlaceID.HasValue ||
+                 updateIllegalMigrantEntity.AccommodationPlaceID.Value != illegalMigrantEntityDocument.AccommodationPlaceID.Value))
+            {
+                await _accommodationPlaceEntityService.IncrementUsedAccommodationCapacity(updateIllegalMigrantEntity.AccommodationPlaceID.Value);
+            }
+
             await _illegalMigrantEntityRepository.UpdateAsync(id, updateIllegalMigrantEntity.Map());
         }
 
@@ -57,6 +80,11 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
             if (illegalMigrantEntityDocument == null)
             {
                 throw new ResourceNotFoundException("Illegal migrant entity not found");
+            }
+
+            if (illegalMigrantEntityDocument.AccommodationPlaceID.HasValue)
+            {
+                await _accommodationPlaceEntityService.DecrementUsedAccommodationCapacity(illegalMigrantEntityDocument.AccommodationPlaceID.Value);
             }
 
             await _illegalMigrantEntityRepository.DeleteAsync(id);
