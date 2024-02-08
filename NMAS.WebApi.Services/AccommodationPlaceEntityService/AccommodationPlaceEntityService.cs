@@ -9,17 +9,17 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
 {
     public class AccommodationPlaceEntityService : IAccommodationPlaceEntityService
     {
-        private readonly IAccommodationPlaceEntityRepository _accommodationEntityRepository;
+        private readonly IAccommodationPlaceEntityRepository _accommodationPlaceEntityRepository;
 
-        public AccommodationPlaceEntityService(IAccommodationPlaceEntityRepository accommodationEntityRepository)
+        public AccommodationPlaceEntityService(IAccommodationPlaceEntityRepository accommodationPlaceEntityRepository)
         {
-            _accommodationEntityRepository = accommodationEntityRepository;
+            _accommodationPlaceEntityRepository = accommodationPlaceEntityRepository;
         }
 
         public async Task<AccommodationPlaceEntityCreated> CreateAsync(CreateAccommodationPlaceEntity createAccommodationPlaceEntity)
         {
             var document = createAccommodationPlaceEntity.Map();
-            var createdAccommodationPlaceEntityId = await _accommodationEntityRepository.CreateAsync(document);
+            var createdAccommodationPlaceEntityId = await _accommodationPlaceEntityRepository.CreateAsync(document);
 
             return new AccommodationPlaceEntityCreated
             {
@@ -29,7 +29,7 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
 
         public async Task<AccommodationPlaceEntity> GetAsync(int id)
         {
-            var accommodationPlaceEntityDocument = await _accommodationEntityRepository.GetAsync(id);
+            var accommodationPlaceEntityDocument = await _accommodationPlaceEntityRepository.GetAsync(id);
 
             if (accommodationPlaceEntityDocument == null)
             {
@@ -41,26 +41,46 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
 
         public async Task UpdateAsync(int id, UpdateAccommodationPlaceEntity updateAccommodationPlaceEntity)
         {
-            var accommodationPlaceEntityDocument = await _accommodationEntityRepository.GetAsync(id);
+            var accommodationPlaceEntityDocument = await _accommodationPlaceEntityRepository.GetAsync(id);
 
             if (accommodationPlaceEntityDocument == null)
             {
                 throw new ResourceNotFoundException("Accommodation place entity not found");
             }
 
-            await _accommodationEntityRepository.UpdateAsync(id, updateAccommodationPlaceEntity.Map());
+            await _accommodationPlaceEntityRepository.UpdateAsync(id, updateAccommodationPlaceEntity.Map());
         }
 
         public async Task DeleteAsync(int id)
         {
-            var accommodationPlaceEntityDocument = await _accommodationEntityRepository.GetAsync(id);
+            var accommodationPlaceEntityDocument = await _accommodationPlaceEntityRepository.GetAsync(id);
 
             if (accommodationPlaceEntityDocument == null)
             {
                 throw new ResourceNotFoundException("Accommodation place entity not found");
             }
 
-            await _accommodationEntityRepository.DeleteAsync(id);
+            await _accommodationPlaceEntityRepository.DeleteAsync(id);
+        }
+
+        public async Task IncrementUsedAccommodationCapacity(int accommodationPlaceId)
+        {
+            var accommodationPlace = await _accommodationPlaceEntityRepository.GetAsync(accommodationPlaceId);
+            if (accommodationPlace != null)
+            {
+                accommodationPlace.UsedAccommodationCapacity += 1;
+                await _accommodationPlaceEntityRepository.UpdateAsync(accommodationPlaceId, accommodationPlace);
+            }
+        }
+
+        public async Task DecrementUsedAccommodationCapacity(int accommodationPlaceId)
+        {
+            var accommodationPlace = await _accommodationPlaceEntityRepository.GetAsync(accommodationPlaceId);
+            if (accommodationPlace != null)
+            {
+                accommodationPlace.UsedAccommodationCapacity -= 1;
+                await _accommodationPlaceEntityRepository.UpdateAsync(accommodationPlaceId, accommodationPlace);
+            }
         }
     }
 }

@@ -13,5 +13,9 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         Task UpdateAsync(int id, UpdateAccommodationPlaceEntity updateAccommodationPlaceEntity);
 
         Task DeleteAsync(int id);
+
+        Task IncrementUsedAccommodationCapacity(int accommodationPlaceId);
+
+        Task DecrementUsedAccommodationCapacity(int accommodationPlaceId);
     }
 }
