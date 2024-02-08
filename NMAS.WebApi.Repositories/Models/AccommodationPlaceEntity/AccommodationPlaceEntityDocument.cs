@@ -2,6 +2,7 @@
 {
     public class AccommodationPlaceEntityDocument
     {
+        public int ID { get; set; }
         public int WorkerID { get; set; }
         public string PlaceName { get; set; }
         public string Adress { get; set; }

@@ -12,5 +12,7 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
         Task UpdateAsync(int id, UpdateIllegalMigrantEntity updateIllegalMigrantEntity);
 
         Task DeleteAsync(int id);
+
+        Task AssignAsync(int id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NMAS.WebApi.Repositories.Bases;
 using NMAS.WebApi.Repositories.Models.AccommodationPlaceEntity;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -50,6 +51,14 @@ namespace NMAS.WebApi.Repositories.AccommodationPlaceEntity
             using (var db = await OpenAsync())
             {
                 await DeleteAsync(db, AccommodationPlaceTable, id);
+            }
+        }
+
+        public async Task<IEnumerable<AccommodationPlaceEntityDocument>> GetAllAccommodationPlacesAsync()
+        {
+            using (var db = await OpenAsync())
+            {
+                return await GetAllAsync<AccommodationPlaceEntityDocument>(db, AccommodationPlaceTable);
             }
         }
     }

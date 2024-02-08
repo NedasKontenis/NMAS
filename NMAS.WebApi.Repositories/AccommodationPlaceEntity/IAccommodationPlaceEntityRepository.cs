@@ -1,4 +1,5 @@
 ﻿using NMAS.WebApi.Repositories.Models.AccommodationPlaceEntity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Repositories.AccommodationPlaceEntity
@@ -12,5 +13,7 @@ namespace NMAS.WebApi.Repositories.AccommodationPlaceEntity
         Task UpdateAsync(int id, AccommodationPlaceEntityDocument document);
 
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<AccommodationPlaceEntityDocument>> GetAllAccommodationPlacesAsync();
     }
 }

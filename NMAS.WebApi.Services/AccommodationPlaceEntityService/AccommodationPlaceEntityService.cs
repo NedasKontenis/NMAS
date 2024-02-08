@@ -3,6 +3,8 @@ using NMAS.WebApi.Contracts.AccomodationPlaceEntity;
 using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Repositories.AccommodationPlaceEntity;
 using NMAS.WebApi.Services.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
@@ -81,6 +83,15 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
                 accommodationPlace.UsedAccommodationCapacity -= 1;
                 await _accommodationPlaceEntityRepository.UpdateAsync(accommodationPlaceId, accommodationPlace);
             }
+        }
+
+        public async Task<IEnumerable<AccommodationPlaceEntity>> GetAllAccommodationPlacesAsync()
+        {
+            var accommodationPlaceEntities = await _accommodationPlaceEntityRepository.GetAllAccommodationPlacesAsync();
+
+            return accommodationPlaceEntities
+                .Select(AccommodationPlaceEntityMapperExtension.Map)
+                .ToList();
         }
     }
 }
