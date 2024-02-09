@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NMAS.WebApi.Contracts.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace NMAS.WebApi.Contracts.IllegalMigrantEntity
@@ -61,8 +62,9 @@ namespace NMAS.WebApi.Contracts.IllegalMigrantEntity
         /// <summary>
         ///     Religion of illegal migrant
         /// </summary>
-        /// <example>Sunni</example>
+        /// <example>Christianity</example>
         [Required]
+        [EnumDataType(typeof(IllegalMigrantReligion))]
         public string Religion { get; set; }
     }
 }

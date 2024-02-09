@@ -1,4 +1,5 @@
 ﻿using NMAS.WebApi.Repositories.Models.IllegalMigrantEntity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Repositories.IllegalMigrantEntity
@@ -12,5 +13,7 @@ namespace NMAS.WebApi.Repositories.IllegalMigrantEntity
         Task UpdateAsync(int id, IllegalMigrantEntityDocument document);
 
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<IllegalMigrantEntityDocument>> GetAllAsync();
     }
 }
