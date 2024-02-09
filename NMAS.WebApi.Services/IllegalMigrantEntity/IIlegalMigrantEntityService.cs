@@ -1,4 +1,5 @@
-﻿using NMAS.WebApi.Contracts.Exceptions;
+﻿using NMAS.WebApi.Contracts.Enums;
+using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
 using NMAS.WebApi.Services.AccommodationPlaceEntityService;
@@ -105,21 +106,40 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
                 throw new BadRequestException("Illegal migrant is already assigned to an accommodation place");
             }
 
+            var allMigrants = await _illegalMigrantEntityRepository.GetAllAsync();
+
             var accommodationPlaces = await _accommodationPlaceEntityService.GetAllAccommodationPlacesAsync();
+            int? availableAccommodationPlaceId = null;
 
-            var availableAccommodationPlace = accommodationPlaces
-                .FirstOrDefault(place => place.UsedAccommodationCapacity < place.AccommodationCapacity);
-
-            if (availableAccommodationPlace == null)
+            foreach (var place in accommodationPlaces.OrderBy(p => p.Id))
             {
-                throw new BadRequestException("No accommodation places with available capacity");
+                if (place.UsedAccommodationCapacity >= place.AccommodationCapacity)
+                {
+                    continue;
+                }
+
+                var migrantsInPlace = allMigrants.Where(m => m.AccommodationPlaceID == place.Id).ToList();
+
+                bool isReligionCompatible = !migrantsInPlace.Any(m =>
+                    (m.Religion == IllegalMigrantReligion.Sunni.ToString() && illegalMigrantEntityDocument.Religion == IllegalMigrantReligion.Shia.ToString()) ||
+                    (m.Religion == IllegalMigrantReligion.Shia.ToString() && illegalMigrantEntityDocument.Religion == IllegalMigrantReligion.Sunni.ToString()));
+
+                if (isReligionCompatible)
+                {
+                    availableAccommodationPlaceId = place.Id;
+                    break;
+                }
             }
 
-            illegalMigrantEntityDocument.AccommodationPlaceID = availableAccommodationPlace.Id;
+            if (availableAccommodationPlaceId == null)
+            {
+                throw new BadRequestException("No suitable accommodation place found based on capacity and religious compatibility");
+            }
+
+            illegalMigrantEntityDocument.AccommodationPlaceID = availableAccommodationPlaceId;
             await _illegalMigrantEntityRepository.UpdateAsync(id, illegalMigrantEntityDocument);
 
-            availableAccommodationPlace.UsedAccommodationCapacity += 1;
-            await _accommodationPlaceEntityService.IncrementUsedAccommodationCapacity(availableAccommodationPlace.Id);
+            await _accommodationPlaceEntityService.IncrementUsedAccommodationCapacity((int)availableAccommodationPlaceId);
         }
     }
 }

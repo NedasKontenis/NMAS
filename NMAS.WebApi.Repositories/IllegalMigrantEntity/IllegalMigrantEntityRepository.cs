@@ -1,6 +1,7 @@
 ﻿using NMAS.WebApi.Repositories.Bases;
 using NMAS.WebApi.Repositories.Models.IllegalMigrantEntity;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -50,6 +51,14 @@ namespace NMAS.WebApi.Repositories.IllegalMigrantEntity
             using (var db = await OpenAsync())
             {
                 await DeleteAsync(db, IllegalMigrantTable, id);
+            }
+        }
+
+        public async Task<IEnumerable<IllegalMigrantEntityDocument>> GetAllAsync()
+        {
+            using (var db = await OpenAsync())
+            {
+                return await GetAllAsync<IllegalMigrantEntityDocument>(db, IllegalMigrantTable);
             }
         }
     }
