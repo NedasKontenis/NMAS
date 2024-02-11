@@ -11,10 +11,14 @@ using System.Threading.Tasks;
 namespace NMAS.WebApi.Integration.Tests
 {
     [TestFixture]
+    [Category("Integration")]
     public class IllegalMigrantEntityIntegrationTests : TestBase
     {
         [Test, AutoData]
-        public async Task CreateIllegalMigrantEntity_ShouldAddEntity(IllegalMigrantEntity migrant, WorkerEntity worker, AccommodationPlaceEntity place)
+        public async Task CreateIllegalMigrantEntity_ShouldAddEntity(
+            IllegalMigrantEntity migrant,
+            WorkerEntity worker,
+            AccommodationPlaceEntity place)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
@@ -35,7 +39,11 @@ namespace NMAS.WebApi.Integration.Tests
         }
 
         [Test, AutoData]
-        public async Task UpdateIllegalMigrantEntity_ShouldModifyEntity(IllegalMigrantEntity migrant, WorkerEntity worker, AccommodationPlaceEntity place, string updatedLastName)
+        public async Task UpdateIllegalMigrantEntity_ShouldModifyEntity(
+            IllegalMigrantEntity migrant,
+            WorkerEntity worker,
+            AccommodationPlaceEntity place,
+            string updatedLastName)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
@@ -57,7 +65,10 @@ namespace NMAS.WebApi.Integration.Tests
         }
 
         [Test, AutoData]
-        public async Task DeleteIllegalMigrantEntity_ShouldRemoveEntity(IllegalMigrantEntity migrant, WorkerEntity worker, AccommodationPlaceEntity place)
+        public async Task DeleteIllegalMigrantEntity_ShouldRemoveEntity(
+            IllegalMigrantEntity migrant,
+            WorkerEntity worker,
+            AccommodationPlaceEntity place)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {

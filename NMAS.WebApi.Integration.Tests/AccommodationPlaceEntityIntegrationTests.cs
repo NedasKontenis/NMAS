@@ -9,10 +9,13 @@ using System.Threading.Tasks;
 namespace NMAS.WebApi.Integration.testss
 {
     [TestFixture]
+    [Category("Integration")]
     public class AccommodationPlaceEntityIntegrationtests : TestBase
     {
         [Test, AutoData]
-        public async Task CreateAccommodationPlaceEntity_ShouldAddEntity(AccommodationPlaceEntity place, WorkerEntity worker)
+        public async Task CreateAccommodationPlaceEntity_ShouldAddEntity(
+            AccommodationPlaceEntity place,
+            WorkerEntity worker)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
@@ -33,7 +36,10 @@ namespace NMAS.WebApi.Integration.testss
         }
 
         [Test, AutoData]
-        public async Task UpdateAccommodationPlaceEntity_ShouldModifyEntity(AccommodationPlaceEntity place, WorkerEntity worker, string placeName)
+        public async Task UpdateAccommodationPlaceEntity_ShouldModifyEntity(
+            AccommodationPlaceEntity place,
+            WorkerEntity worker,
+            string placeName)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
@@ -54,7 +60,9 @@ namespace NMAS.WebApi.Integration.testss
         }
 
         [Test, AutoData]
-        public async Task DeleteAccommodationPlaceEntity_ShouldRemoveEntity(AccommodationPlaceEntity place, WorkerEntity worker)
+        public async Task DeleteAccommodationPlaceEntity_ShouldRemoveEntity(
+            AccommodationPlaceEntity place,
+            WorkerEntity worker)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
