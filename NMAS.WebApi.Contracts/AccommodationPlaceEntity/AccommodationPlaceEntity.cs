@@ -5,6 +5,6 @@
         /// <summary>
         ///     The Accommodation Place Entity id
         /// </summary>
-        public int Id { get; set; }
+        public int ID { get; set; }
     }
 }

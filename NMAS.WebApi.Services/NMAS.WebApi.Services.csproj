@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NMAS.WebApi.Client\NMAS.WebApi.Client.csproj" />
     <ProjectReference Include="..\NMAS.WebApi.Contracts\NMAS.WebApi.Contracts.csproj" />
     <ProjectReference Include="..\NMAS.WebApi.Repositories\NMAS.WebApi.Repositories.csproj" />
   </ItemGroup>
