@@ -111,14 +111,14 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
             var accommodationPlaces = await _accommodationPlaceEntityService.GetAllAccommodationPlacesAsync();
             int? availableAccommodationPlaceId = null;
 
-            foreach (var place in accommodationPlaces.OrderBy(p => p.Id))
+            foreach (var place in accommodationPlaces.OrderBy(p => p.ID))
             {
                 if (place.UsedAccommodationCapacity >= place.AccommodationCapacity)
                 {
                     continue;
                 }
 
-                var migrantsInPlace = allMigrants.Where(m => m.AccommodationPlaceID == place.Id).ToList();
+                var migrantsInPlace = allMigrants.Where(m => m.AccommodationPlaceID == place.ID).ToList();
 
                 bool isReligionCompatible = !migrantsInPlace.Any(m =>
                     (m.Religion == IllegalMigrantReligion.Sunni.ToString() && illegalMigrantEntityDocument.Religion == IllegalMigrantReligion.Shia.ToString()) ||
@@ -126,7 +126,7 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
 
                 if (isReligionCompatible)
                 {
-                    availableAccommodationPlaceId = place.Id;
+                    availableAccommodationPlaceId = place.ID;
                     break;
                 }
             }
