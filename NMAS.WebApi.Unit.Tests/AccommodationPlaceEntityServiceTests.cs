@@ -12,6 +12,7 @@ using Xunit;
 
 namespace NMAS.WebApi.Unit.testss
 {
+    [Trait("Category", "Unit")]
     public class AccommodationPlaceEntityServicetestss
     {
         private readonly Mock<IAccommodationPlaceEntityRepository> _mockRepository;
@@ -26,8 +27,7 @@ namespace NMAS.WebApi.Unit.testss
         [Theory, AutoData]
         public async Task CreateAsync_ShouldReturnCreatedEntity(
             CreateAccommodationPlaceEntity createRequest,
-            int expectedId
-        )
+            int expectedId)
         {
             // Arrange
             _mockRepository.Setup(repo => repo.CreateAsync(It.IsAny<AccommodationPlaceEntityDocument>()))
@@ -76,7 +76,9 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task DeleteAsync_ShouldInvokeRepository_WhenEntityExists(int testsId, AccommodationPlaceEntityDocument existingDocument)
+        public async Task DeleteAsync_ShouldInvokeRepository_WhenEntityExists(
+            int testsId,
+            AccommodationPlaceEntityDocument existingDocument)
         {
             // Arrange
             _mockRepository.Setup(repo => repo.GetAsync(testsId))
@@ -90,7 +92,8 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task GetAllAccommodationPlacesAsync_ShouldReturnAllPlaces(List<AccommodationPlaceEntityDocument> expectedPlaces)
+        public async Task GetAllAccommodationPlacesAsync_ShouldReturnAllPlaces(
+            List<AccommodationPlaceEntityDocument> expectedPlaces)
         {
             // Arrange
             _mockRepository.Setup(repo => repo.GetAllAccommodationPlacesAsync())
@@ -104,7 +107,9 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task IncrementUsedAccommodationCapacity_ShouldIncrementCapacity(int placeId, AccommodationPlaceEntityDocument placeBeforeIncrement)
+        public async Task IncrementUsedAccommodationCapacity_ShouldIncrementCapacity(
+            int placeId,
+            AccommodationPlaceEntityDocument placeBeforeIncrement)
         {
             // Arrange
             placeBeforeIncrement.UsedAccommodationCapacity = 5;
@@ -126,7 +131,9 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task DecrementUsedAccommodationCapacity_ShouldDecrementCapacity(int placeId, AccommodationPlaceEntityDocument placeBeforeDecrement)
+        public async Task DecrementUsedAccommodationCapacity_ShouldDecrementCapacity(
+            int placeId,
+            AccommodationPlaceEntityDocument placeBeforeDecrement)
         {
             // Arrange
             placeBeforeDecrement.UsedAccommodationCapacity = 5;

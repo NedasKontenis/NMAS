@@ -14,6 +14,7 @@ using Xunit;
 
 namespace NMAS.WebApi.Unit.testss
 {
+    [Trait("Category", "Unit")]
     public class IllegalMigrantEntityServicetestss
     {
         private readonly Mock<IIllegalMigrantEntityRepository> _mockIllegalMigrantEntityRepository;
@@ -45,7 +46,9 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task GetAsync_ShouldReturnEntity_WhenEntityExists(int id, IllegalMigrantEntityDocument expectedEntity)
+        public async Task GetAsync_ShouldReturnEntity_WhenEntityExists(
+            int id,
+            IllegalMigrantEntityDocument expectedEntity)
         {
             // Arrange
             _mockIllegalMigrantEntityRepository.Setup(r => r.GetAsync(id)).ReturnsAsync(expectedEntity);
@@ -59,7 +62,9 @@ namespace NMAS.WebApi.Unit.testss
         }
 
         [Theory, AutoData]
-        public async Task UpdateAsync_ShouldUpdateEntity_WhenEntityExists(int id, UpdateIllegalMigrantEntity updateRequest)
+        public async Task UpdateAsync_ShouldUpdateEntity_WhenEntityExists(
+            int id,
+            UpdateIllegalMigrantEntity updateRequest)
         {
             // Arrange
             _mockIllegalMigrantEntityRepository.Setup(r => r.GetAsync(id)).ReturnsAsync(new IllegalMigrantEntityDocument());
