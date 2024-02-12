@@ -7,21 +7,24 @@ using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.Models.IllegalMigrantEntity;
 using NMAS.WebApi.Services.AccommodationPlaceEntityService;
+using NMAS.WebApi.Services.Extensions;
 using NMAS.WebApi.Services.IllegalMigrantEntity;
+using NMAS.WebApi.Unit.Tests.CustomAutoDataFixture;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NMAS.WebApi.Unit.testss
+namespace NMAS.WebApi.Unit.tests
 {
     [Trait("Category", "Unit")]
-    public class IllegalMigrantEntityServicetestss
+    public class IllegalMigrantEntityServiceTests
     {
         private readonly Mock<IIllegalMigrantEntityRepository> _mockIllegalMigrantEntityRepository;
         private readonly Mock<IAccommodationPlaceEntityService> _mockAccommodationPlaceEntityService;
         private readonly IllegalMigrantEntityService _service;
 
-        public IllegalMigrantEntityServicetestss()
+        public IllegalMigrantEntityServiceTests()
         {
             _mockIllegalMigrantEntityRepository = new Mock<IIllegalMigrantEntityRepository>();
             _mockAccommodationPlaceEntityService = new Mock<IAccommodationPlaceEntityService>();
@@ -140,6 +143,39 @@ namespace NMAS.WebApi.Unit.testss
             Assert.Equal("No suitable accommodation place found based on capacity and religious compatibility", exception.Message);
 
             _mockIllegalMigrantEntityRepository.Verify(r => r.UpdateAsync(It.IsAny<int>(), It.IsAny<IllegalMigrantEntityDocument>()), Times.Never);
+        }
+
+        [Theory, CustomAutoData]
+        public async Task ListAsync_ShouldReturnFilteredResults(
+        Contracts.IllegalMigrantEntity.FilterIllegalMigrantEntity filter,
+        FilterIllegalMigrantEntityPagination pagination,
+        List<IllegalMigrantEntityDocument> repositoryResult)
+        {
+            _mockIllegalMigrantEntityRepository
+                .Setup(repo => repo.ListAsync(It.IsAny<Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntity>()))
+                .ReturnsAsync(repositoryResult);
+
+            // Act
+            var result = await _service.ListAsync(filter, pagination);
+
+            // Assert
+            Assert.NotEmpty(result);
+            result.Should().BeEquivalentTo(repositoryResult.Select(IllegalMigrantEntityMapperExtension.Map));
+            _mockIllegalMigrantEntityRepository.Verify(repo => repo.ListAsync(It.IsAny<Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntity>()), Times.Once);
+        }
+
+        [Theory, CustomAutoData]
+        public async Task ListAsync_ShouldThrowResourceNotFoundException_WhenNoResults(
+        Contracts.IllegalMigrantEntity.FilterIllegalMigrantEntity filter,
+        FilterIllegalMigrantEntityPagination pagination)
+        {
+            // Arrange
+            _mockIllegalMigrantEntityRepository
+                .Setup(repo => repo.ListAsync(It.IsAny<Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntity>()))
+                .ReturnsAsync(new List<IllegalMigrantEntityDocument>());
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ResourceNotFoundException>(() => _service.ListAsync(filter, pagination));
         }
     }
 }

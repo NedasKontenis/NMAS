@@ -3,22 +3,25 @@ using FluentAssertions;
 using Moq;
 using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
 using NMAS.WebApi.Contracts.AccomodationPlaceEntity;
+using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Repositories.AccommodationPlaceEntity;
 using NMAS.WebApi.Repositories.Models.AccommodationPlaceEntity;
 using NMAS.WebApi.Services.AccommodationPlaceEntityService;
+using NMAS.WebApi.Services.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace NMAS.WebApi.Unit.testss
+namespace NMAS.WebApi.Unit.tests
 {
     [Trait("Category", "Unit")]
-    public class AccommodationPlaceEntityServicetestss
+    public class AccommodationPlaceEntityServiceTests
     {
         private readonly Mock<IAccommodationPlaceEntityRepository> _mockRepository;
         private readonly AccommodationPlaceEntityService _service;
 
-        public AccommodationPlaceEntityServicetestss()
+        public AccommodationPlaceEntityServiceTests()
         {
             _mockRepository = new Mock<IAccommodationPlaceEntityRepository>();
             _service = new AccommodationPlaceEntityService(_mockRepository.Object);
@@ -152,6 +155,39 @@ namespace NMAS.WebApi.Unit.testss
 
             // Assert
             _mockRepository.Verify(repo => repo.UpdateAsync(placeId, It.IsAny<AccommodationPlaceEntityDocument>()), Times.Once);
+        }
+
+        [Theory, AutoData]
+        public async Task ListAsync_ShouldReturnFilteredResults(
+        Contracts.AccommodationPlaceEntity.FilterAccommodationPlaceEntity filter,
+        FilterAccommodationPlaceEntityPagination pagination,
+        List<AccommodationPlaceEntityDocument> repositoryResult)
+        {
+            // Arrange
+            _mockRepository
+                .Setup(repo => repo.ListAsync(It.IsAny<Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntity>()))
+                .ReturnsAsync(repositoryResult);
+
+            // Act
+            var result = await _service.ListAsync(filter, pagination);
+
+            // Assert
+            result.Should().BeEquivalentTo(repositoryResult.Select(AccommodationPlaceEntityMapperExtension.Map));
+            _mockRepository.Verify(repo => repo.ListAsync(It.IsAny<Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntity>()), Times.Once);
+        }
+
+        [Theory, AutoData]
+        public async Task ListAsync_ShouldThrowResourceNotFoundException_WhenNoResults(
+        Contracts.AccommodationPlaceEntity.FilterAccommodationPlaceEntity filter,
+        FilterAccommodationPlaceEntityPagination pagination)
+        {
+            // Arrange
+            _mockRepository
+                .Setup(repo => repo.ListAsync(It.IsAny<Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntity>()))
+                .ReturnsAsync(new List<AccommodationPlaceEntityDocument>());
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ResourceNotFoundException>(() => _service.ListAsync(filter, pagination));
         }
     }
 }
