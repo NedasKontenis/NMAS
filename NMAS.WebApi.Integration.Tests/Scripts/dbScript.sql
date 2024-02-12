@@ -3,7 +3,7 @@ GO
 
 /* Create Tables */
 CREATE TABLE [dbo].[Worker](
-    [ID] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
     [FirstName] VARCHAR(100) NOT NULL,
     [LastName] VARCHAR(100) NOT NULL,
     [PersonalIdentityCode] VARCHAR(100),
@@ -13,21 +13,21 @@ CREATE TABLE [dbo].[Worker](
 GO
 
 CREATE TABLE [dbo].[AccommodationPlace](
-    [ID] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    [WorkerID] INT NOT NULL,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    [WorkerId] INT NOT NULL,
     [PlaceName] VARCHAR(100) NOT NULL,
     [Adress] VARCHAR(100) NOT NULL,
     [AccommodationCapacity] INT,
     [UsedAccommodationCapacity] INT,
     [CompanyCode] VARCHAR(100),
     [ContactPhone] VARCHAR(100),
-    CONSTRAINT fk_Worker FOREIGN KEY (WorkerID) REFERENCES [dbo].[Worker](ID)
+    CONSTRAINT fk_Worker FOREIGN KEY (WorkerId) REFERENCES [dbo].[Worker](Id)
 );
 GO
 
 CREATE TABLE [dbo].[IllegalMigrant](
-    [ID] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
-    [AccommodationPlaceID] INT,
+    [Id] INT IDENTITY(1,1) PRIMARY KEY NOT NULL,
+    [AccommodationPlaceId] INT,
     [PersonalIdentityCode] VARCHAR(100),
     [FirstName] VARCHAR(100) NOT NULL,
     [MiddleName] VARCHAR(100),
@@ -36,6 +36,6 @@ CREATE TABLE [dbo].[IllegalMigrant](
     [DateOfBirth] DATE,
     [OriginCountry] VARCHAR(100) NOT NULL,
     [Religion] VARCHAR(100),
-    CONSTRAINT fk_AccomodationPlace FOREIGN KEY (AccommodationPlaceID) REFERENCES [dbo].[AccommodationPlace](ID)
+    CONSTRAINT fk_AccomodationPlace FOREIGN KEY (AccommodationPlaceId) REFERENCES [dbo].[AccommodationPlace](Id)
 );
 GO

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NMAS.WebApi.Host.Configurations;
 using NMAS.WebApi.Host.Middlewares;
+using System.Text.Json.Serialization;
 
 namespace NMAS
 {
@@ -33,7 +34,11 @@ namespace NMAS
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
             services.ConfigureDependencyInjection(Configuration, Environment);
             services.ConfigureSwagger(Configuration);
         }

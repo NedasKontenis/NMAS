@@ -12,11 +12,11 @@ namespace NMAS.WebApi.Services.Extensions
                 return null;
             }
 
-            int? accommodationPlaceId = source.AccommodationPlaceID == 0 ? null : source.AccommodationPlaceID;
+            int? accommodationPlaceId = source.AccommodationPlaceId == 0 ? null : source.AccommodationPlaceId;
 
             var illegalMigrantEntityDocument = new IllegalMigrantEntityDocument
             {
-                AccommodationPlaceID = accommodationPlaceId,
+                AccommodationPlaceId = accommodationPlaceId,
                 PersonalIdentityCode = source.PersonalIdentityCode,
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,
@@ -39,7 +39,8 @@ namespace NMAS.WebApi.Services.Extensions
 
             return new Contracts.IllegalMigrantEntity.IllegalMigrantEntity
             {
-                AccommodationPlaceID = source.AccommodationPlaceID,
+                Id = source.Id,
+                AccommodationPlaceId = source.AccommodationPlaceId,
                 PersonalIdentityCode = source.PersonalIdentityCode,
                 FirstName = source.FirstName,
                 MiddleName = source.MiddleName,
@@ -49,6 +50,39 @@ namespace NMAS.WebApi.Services.Extensions
                 OriginCountry = source.OriginCountry,
                 Religion = source.Religion
             };
+        }
+
+        public static Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntity Map(this Contracts.IllegalMigrantEntity.FilterIllegalMigrantEntity source, FilterIllegalMigrantEntityPagination pagination)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            var filterIllegalMigrantEntity = new Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntity
+            {
+                Ids = source.Ids,
+                AccommodationPlaceIds = source.AccommodationPlaceIds,
+                PersonalIdentityCodes = source.PersonalIdentityCodes,
+                FirstNames = source.FirstNames,
+                LastNames = source.LastNames,
+                Genders = source.Genders,
+                OriginCountries = source.OriginCountries,
+                Religions = source.Religions,
+                Limit = pagination.Limit,
+                Offset = pagination.Offset,
+                OrderBy = (Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntityOrderBy)pagination.OrderBy,
+                OrderDirection = (Repositories.Models.IllegalMigrantEntity.FilterIllegalMigrantEntityOrderDirection)pagination.OrderDirection
+            };
+
+            if (source.DateOfBirth != null)
+            {
+                filterIllegalMigrantEntity.DateOfBirth = new Repositories.Models.IllegalMigrantEntity.FilterDateOfBirth(
+                    source.DateOfBirth.From,
+                    source.DateOfBirth.To);
+            }
+
+            return filterIllegalMigrantEntity;
         }
     }
 }

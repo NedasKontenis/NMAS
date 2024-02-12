@@ -81,5 +81,28 @@ namespace NMAS.WebApi.Host.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Returns a list of accommodation place entities
+        /// </summary>
+        [HttpPost("filter")]
+        [ProducesResponseType(typeof(AccommodationPlaceEntity), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> List([FromBody] FilterAccommodationPlaceEntity filter, [FromQuery] FilterAccommodationPlaceEntityPagination pagination)
+        {
+            var accommodationPlaceEntityFilter = new FilterAccommodationPlaceEntity
+            {
+                Ids = filter.Ids,
+                WorkerIds = filter.WorkerIds,
+                PlaceNames = filter.PlaceNames,
+                Adresses = filter.Adresses,
+                CompanyCodes = filter.CompanyCodes
+            };
+
+            var accommodationPlaceEntities = await _accommodationPlaceEntityService.ListAsync(accommodationPlaceEntityFilter, pagination);
+
+            return Ok(accommodationPlaceEntities);
+        }
     }
 }

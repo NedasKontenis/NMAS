@@ -14,7 +14,7 @@ namespace NMAS.WebApi.Services.Extensions
 
             var accommodationEntityDocument = new AccommodationPlaceEntityDocument
             {
-                WorkerID = source.WorkerID,
+                WorkerId = source.WorkerId,
                 PlaceName = source.PlaceName,
                 Adress = source.Adress,
                 AccommodationCapacity = source.AccommodationCapacity,
@@ -35,8 +35,8 @@ namespace NMAS.WebApi.Services.Extensions
 
             return new AccommodationPlaceEntity
             {
-                ID = source.ID,
-                WorkerID = source.WorkerID,
+                Id = source.Id,
+                WorkerId = source.WorkerId,
                 PlaceName = source.PlaceName,
                 Adress = source.Adress,
                 AccommodationCapacity = source.AccommodationCapacity,
@@ -44,6 +44,29 @@ namespace NMAS.WebApi.Services.Extensions
                 CompanyCode = source.CompanyCode,
                 ContactPhone = source.ContactPhone
             };
+        }
+
+        public static Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntity Map(this Contracts.AccommodationPlaceEntity.FilterAccommodationPlaceEntity source, FilterAccommodationPlaceEntityPagination pagination)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            var filterAccommodationPlaceEntity = new Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntity
+            {
+                Ids = source.Ids,
+                PlaceNames = source.PlaceNames,
+                WorkerIds = source.WorkerIds,
+                Adresses = source.Adresses,
+                CompanyCodes = source.CompanyCodes,
+                Limit = pagination.Limit,
+                Offset = pagination.Offset,
+                OrderBy = (Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntityOrderBy)pagination.OrderBy,
+                OrderDirection = (Repositories.Models.AccommodationPlaceEntity.FilterAccommodationPlaceEntityOrderDirection)pagination.OrderDirection
+            };
+
+            return filterAccommodationPlaceEntity;
         }
     }
 }

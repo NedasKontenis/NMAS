@@ -96,14 +96,13 @@ namespace NMAS.WebApi.Unit.testss
             // Arrange
             var places = new List<AccommodationPlaceEntity>
             {
-                new AccommodationPlaceEntity { ID = 1, AccommodationCapacity = 1000, UsedAccommodationCapacity = 250 },
-                new AccommodationPlaceEntity { ID = 2, AccommodationCapacity = 500, UsedAccommodationCapacity = 500 }, // Fully occupied
-                // Add more places as needed
+                new AccommodationPlaceEntity { Id = 1, AccommodationCapacity = 1000, UsedAccommodationCapacity = 250 },
+                new AccommodationPlaceEntity { Id = 2, AccommodationCapacity = 500, UsedAccommodationCapacity = 500 }, // Fully occupied
             };
 
             var migrantToAssign = new IllegalMigrantEntityDocument
             {
-                AccommodationPlaceID = null,
+                AccommodationPlaceId = null,
             };
 
             _mockIllegalMigrantEntityRepository.Setup(r => r.GetAsync(id)).ReturnsAsync(migrantToAssign);
@@ -114,7 +113,7 @@ namespace NMAS.WebApi.Unit.testss
             await _service.AssignAsync(id);
 
             // Assert
-            _mockIllegalMigrantEntityRepository.Verify(r => r.UpdateAsync(id, It.Is<IllegalMigrantEntityDocument>(m => m.AccommodationPlaceID.HasValue && m.AccommodationPlaceID.Value == 1)), Times.Once);
+            _mockIllegalMigrantEntityRepository.Verify(r => r.UpdateAsync(id, It.Is<IllegalMigrantEntityDocument>(m => m.AccommodationPlaceId.HasValue && m.AccommodationPlaceId.Value == 1)), Times.Once);
         }
 
         [Theory]
@@ -124,13 +123,13 @@ namespace NMAS.WebApi.Unit.testss
             // Arrange
             var places = new List<AccommodationPlaceEntity>
             {
-                new AccommodationPlaceEntity { ID = 1, AccommodationCapacity = 1000, UsedAccommodationCapacity = 1000 }, // Fully occupied
-                new AccommodationPlaceEntity { ID = 2, AccommodationCapacity = 500, UsedAccommodationCapacity = 500 }, // Fully occupied
+                new AccommodationPlaceEntity { Id = 1, AccommodationCapacity = 1000, UsedAccommodationCapacity = 1000 }, // Fully occupied
+                new AccommodationPlaceEntity { Id = 2, AccommodationCapacity = 500, UsedAccommodationCapacity = 500 }, // Fully occupied
             };
 
             var migrantToAssign = new IllegalMigrantEntityDocument
             {
-                AccommodationPlaceID = null,
+                AccommodationPlaceId = null,
             };
 
             _mockIllegalMigrantEntityRepository.Setup(r => r.GetAsync(id)).ReturnsAsync(migrantToAssign);

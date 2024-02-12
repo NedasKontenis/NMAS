@@ -2,8 +2,8 @@
 {
     public class AccommodationPlaceEntityDocument
     {
-        public int ID { get; set; }
-        public int WorkerID { get; set; }
+        public int Id { get; set; }
+        public int WorkerId { get; set; }
         public string PlaceName { get; set; }
         public string Adress { get; set; }
         public int AccommodationCapacity { get; set; }

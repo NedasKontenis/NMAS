@@ -1,4 +1,5 @@
 ﻿using NMAS.WebApi.Contracts.IllegalMigrantEntity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NMAS.WebApi.Services.IllegalMigrantEntity
@@ -14,5 +15,7 @@ namespace NMAS.WebApi.Services.IllegalMigrantEntity
         Task DeleteAsync(int id);
 
         Task AssignAsync(int id);
+
+        Task<IEnumerable<Contracts.IllegalMigrantEntity.IllegalMigrantEntity>> ListAsync(FilterIllegalMigrantEntity filter, FilterIllegalMigrantEntityPagination pagination);
     }
 }

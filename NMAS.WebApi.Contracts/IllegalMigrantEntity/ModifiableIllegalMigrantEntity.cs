@@ -10,7 +10,7 @@ namespace NMAS.WebApi.Contracts.IllegalMigrantEntity
         ///     The id of accomodation place
         /// </summary>
         /// <example>1</example>
-        public int? AccommodationPlaceID { get; set; }
+        public int? AccommodationPlaceId { get; set; }
 
         /// <summary>
         ///     Personal identity code

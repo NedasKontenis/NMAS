@@ -68,6 +68,7 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         public async Task IncrementUsedAccommodationCapacity(int accommodationPlaceId)
         {
             var accommodationPlace = await _accommodationPlaceEntityRepository.GetAsync(accommodationPlaceId);
+
             if (accommodationPlace != null)
             {
                 accommodationPlace.UsedAccommodationCapacity += 1;
@@ -78,6 +79,7 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         public async Task DecrementUsedAccommodationCapacity(int accommodationPlaceId)
         {
             var accommodationPlace = await _accommodationPlaceEntityRepository.GetAsync(accommodationPlaceId);
+
             if (accommodationPlace != null)
             {
                 accommodationPlace.UsedAccommodationCapacity -= 1;
@@ -88,6 +90,20 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         public async Task<IEnumerable<AccommodationPlaceEntity>> GetAllAccommodationPlacesAsync()
         {
             var accommodationPlaceEntities = await _accommodationPlaceEntityRepository.GetAllAccommodationPlacesAsync();
+
+            return accommodationPlaceEntities
+                .Select(AccommodationPlaceEntityMapperExtension.Map)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<AccommodationPlaceEntity>> ListAsync(FilterAccommodationPlaceEntity filter, FilterAccommodationPlaceEntityPagination pagination)
+        {
+            var accommodationPlaceEntities = await _accommodationPlaceEntityRepository.ListAsync(filter.Map(pagination));
+
+            if (!accommodationPlaceEntities.Any())
+            {
+                throw new ResourceNotFoundException("Accommodation place entities not found");
+            }
 
             return accommodationPlaceEntities
                 .Select(AccommodationPlaceEntityMapperExtension.Map)

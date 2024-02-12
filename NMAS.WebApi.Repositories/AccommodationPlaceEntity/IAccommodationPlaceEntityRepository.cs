@@ -15,5 +15,7 @@ namespace NMAS.WebApi.Repositories.AccommodationPlaceEntity
         Task DeleteAsync(int id);
 
         Task<IEnumerable<AccommodationPlaceEntityDocument>> GetAllAccommodationPlacesAsync();
+
+        Task<IEnumerable<AccommodationPlaceEntityDocument>> ListAsync(FilterAccommodationPlaceEntity filter);
     }
 }

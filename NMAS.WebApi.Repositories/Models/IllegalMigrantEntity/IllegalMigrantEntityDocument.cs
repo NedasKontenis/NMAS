@@ -4,7 +4,8 @@ namespace NMAS.WebApi.Repositories.Models.IllegalMigrantEntity
 {
     public class IllegalMigrantEntityDocument
     {
-        public int? AccommodationPlaceID { get; set; }
+        public int Id { get; set; }
+        public int? AccommodationPlaceId { get; set; }
         public string PersonalIdentityCode { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }

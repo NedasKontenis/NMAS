@@ -27,12 +27,12 @@ namespace NMAS.WebApi.Integration.Tests
                 var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
 
                 var result = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
-                    "SELECT * FROM IllegalMigrant WHERE ID = @Id;", new { Id = migrantId }, transaction: transaction);
+                    "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
 
                 Assert.NotNull(result);
                 Assert.AreEqual(migrant.FirstName, result.FirstName);
                 Assert.AreEqual(migrant.LastName, result.LastName);
-                Assert.AreEqual(placeId, result.AccommodationPlaceID);
+                Assert.AreEqual(placeId, result.AccommodationPlaceId);
 
                 transaction.Rollback();
             }
@@ -52,11 +52,11 @@ namespace NMAS.WebApi.Integration.Tests
                 var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
 
                 await TestsDbConnection.ExecuteAsync(
-                    "UPDATE IllegalMigrant SET LastName = @UpdatedLastName WHERE ID = @Id;",
+                    "UPDATE IllegalMigrant SET LastName = @UpdatedLastName WHERE Id = @Id;",
                     new { UpdatedLastName = updatedLastName, Id = migrantId }, transaction: transaction);
 
                 var updatedMigrant = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
-                    "SELECT * FROM IllegalMigrant WHERE ID = @Id;", new { Id = migrantId }, transaction: transaction);
+                    "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
 
                 Assert.AreEqual(updatedLastName, updatedMigrant.LastName);
 
@@ -77,11 +77,11 @@ namespace NMAS.WebApi.Integration.Tests
                 var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
 
                 await TestsDbConnection.ExecuteAsync(
-                    "DELETE FROM IllegalMigrant WHERE ID = @Id;",
+                    "DELETE FROM IllegalMigrant WHERE Id = @Id;",
                     new { Id = migrantId }, transaction: transaction);
 
                 var result = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
-                    "SELECT * FROM IllegalMigrant WHERE ID = @Id;", new { Id = migrantId }, transaction: transaction);
+                    "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
 
                 Assert.Null(result);
 
@@ -100,21 +100,21 @@ namespace NMAS.WebApi.Integration.Tests
 
         private async Task<int> InsertAccommodationPlaceAsync(AccommodationPlaceEntity place, int workerId, SqlTransaction transaction)
         {
-            place.WorkerID = workerId;
+            place.WorkerId = workerId;
             return await TestsDbConnection.ExecuteScalarAsync<int>(
-                @"INSERT INTO AccommodationPlace (WorkerID, PlaceName, Adress, AccommodationCapacity, UsedAccommodationCapacity, CompanyCode, ContactPhone)
+                @"INSERT INTO AccommodationPlace (WorkerId, PlaceName, Adress, AccommodationCapacity, UsedAccommodationCapacity, CompanyCode, ContactPhone)
           OUTPUT INSERTED.ID
-          VALUES (@WorkerID, @PlaceName, @Adress, @AccommodationCapacity, @UsedAccommodationCapacity, @CompanyCode, @ContactPhone);",
+          VALUES (@WorkerId, @PlaceName, @Adress, @AccommodationCapacity, @UsedAccommodationCapacity, @CompanyCode, @ContactPhone);",
                 place, transaction: transaction);
         }
 
         private async Task<int> InsertIllegalMigrantAsync(IllegalMigrantEntity migrant, int placeId, SqlTransaction transaction)
         {
-            migrant.AccommodationPlaceID = placeId;
+            migrant.AccommodationPlaceId = placeId;
             return await TestsDbConnection.ExecuteScalarAsync<int>(
-                @"INSERT INTO IllegalMigrant (AccommodationPlaceID, PersonalIdentityCode, FirstName, MiddleName, LastName, Gender, DateOfBirth, OriginCountry, Religion)
+                @"INSERT INTO IllegalMigrant (AccommodationPlaceId, PersonalIdentityCode, FirstName, MiddleName, LastName, Gender, DateOfBirth, OriginCountry, Religion)
           OUTPUT INSERTED.ID
-          VALUES (@AccommodationPlaceID, @PersonalIdentityCode, @FirstName, @MiddleName, @LastName, @Gender, @DateOfBirth, @OriginCountry, @Religion);",
+          VALUES (@AccommodationPlaceId, @PersonalIdentityCode, @FirstName, @MiddleName, @LastName, @Gender, @DateOfBirth, @OriginCountry, @Religion);",
                 migrant, transaction: transaction);
         }
     }

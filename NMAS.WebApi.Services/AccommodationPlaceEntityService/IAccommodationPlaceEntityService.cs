@@ -20,5 +20,7 @@ namespace NMAS.WebApi.Services.AccommodationPlaceEntityService
         Task DecrementUsedAccommodationCapacity(int accommodationPlaceId);
 
         Task<IEnumerable<AccommodationPlaceEntity>> GetAllAccommodationPlacesAsync();
+
+        Task<IEnumerable<AccommodationPlaceEntity>> ListAsync(FilterAccommodationPlaceEntity filter, FilterAccommodationPlaceEntityPagination pagination);
     }
 }

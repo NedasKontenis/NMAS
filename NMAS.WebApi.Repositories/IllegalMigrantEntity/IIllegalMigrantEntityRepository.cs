@@ -15,5 +15,7 @@ namespace NMAS.WebApi.Repositories.IllegalMigrantEntity
         Task DeleteAsync(int id);
 
         Task<IEnumerable<IllegalMigrantEntityDocument>> GetAllAsync();
+
+        Task<IEnumerable<IllegalMigrantEntityDocument>> ListAsync(FilterIllegalMigrantEntity filter);
     }
 }
