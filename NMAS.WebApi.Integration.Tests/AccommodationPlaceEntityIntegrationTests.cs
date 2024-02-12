@@ -23,7 +23,7 @@ namespace NMAS.WebApi.Integration.testss
                 var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
 
                 var result = await TestsDbConnection.QuerySingleOrDefaultAsync<AccommodationPlaceEntity>(
-                    "SELECT * FROM AccommodationPlace WHERE ID = @Id;", new { Id = placeId }, transaction: transaction);
+                    "SELECT * FROM AccommodationPlace WHERE Id = @Id;", new { Id = placeId }, transaction: transaction);
 
                 Assert.NotNull(result);
                 Assert.AreEqual(place.PlaceName, result.PlaceName);
@@ -47,11 +47,11 @@ namespace NMAS.WebApi.Integration.testss
                 var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
 
                 await TestsDbConnection.ExecuteAsync(
-                    "UPDATE AccommodationPlace SET PlaceName = @PlaceName WHERE ID = @Id;",
+                    "UPDATE AccommodationPlace SET PlaceName = @PlaceName WHERE Id = @Id;",
                     new { PlaceName = placeName, Id = placeId }, transaction: transaction);
 
                 var updatedEntity = await TestsDbConnection.QuerySingleOrDefaultAsync<AccommodationPlaceEntity>(
-                    "SELECT * FROM AccommodationPlace WHERE ID = @Id;", new { Id = placeId }, transaction: transaction);
+                    "SELECT * FROM AccommodationPlace WHERE Id = @Id;", new { Id = placeId }, transaction: transaction);
 
                 Assert.AreEqual(placeName, updatedEntity.PlaceName);
 
@@ -70,11 +70,11 @@ namespace NMAS.WebApi.Integration.testss
                 var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
 
                 await TestsDbConnection.ExecuteAsync(
-                    "DELETE FROM AccommodationPlace WHERE ID = @Id;",
+                    "DELETE FROM AccommodationPlace WHERE Id = @Id;",
                     new { Id = placeId }, transaction: transaction);
 
                 var result = await TestsDbConnection.QuerySingleOrDefaultAsync<AccommodationPlaceEntity>(
-                    "SELECT * FROM AccommodationPlace WHERE ID = @Id;", new { Id = placeId }, transaction: transaction);
+                    "SELECT * FROM AccommodationPlace WHERE Id = @Id;", new { Id = placeId }, transaction: transaction);
 
                 Assert.Null(result);
 
@@ -93,11 +93,11 @@ namespace NMAS.WebApi.Integration.testss
 
         private async Task<int> InsertAccommodationPlaceAsync(AccommodationPlaceEntity place, int workerId, SqlTransaction transaction)
         {
-            place.WorkerID = workerId;
+            place.WorkerId = workerId;
             return await TestsDbConnection.ExecuteScalarAsync<int>(
-                @"INSERT INTO AccommodationPlace (WorkerID, PlaceName, Adress, AccommodationCapacity, UsedAccommodationCapacity, CompanyCode, ContactPhone)
+                @"INSERT INTO AccommodationPlace (WorkerId, PlaceName, Adress, AccommodationCapacity, UsedAccommodationCapacity, CompanyCode, ContactPhone)
           OUTPUT INSERTED.ID
-          VALUES (@WorkerID, @PlaceName, @Adress, @AccommodationCapacity, @UsedAccommodationCapacity, @CompanyCode, @ContactPhone);",
+          VALUES (@WorkerId, @PlaceName, @Adress, @AccommodationCapacity, @UsedAccommodationCapacity, @CompanyCode, @ContactPhone);",
                 place, transaction: transaction);
         }
     }

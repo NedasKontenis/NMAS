@@ -94,5 +94,32 @@ namespace NMAS.WebApi.Host.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Returns a list of illegal migrant entities
+        /// </summary>
+        [HttpPost("filter")]
+        [ProducesResponseType(typeof(IllegalMigrantEntity), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> List([FromBody] FilterIllegalMigrantEntity filter, [FromQuery] FilterIllegalMigrantEntityPagination pagination)
+        {
+            var illegalMigrantEntityFilter = new FilterIllegalMigrantEntity
+            {
+                Ids = filter.Ids,
+                AccommodationPlaceIds = filter.AccommodationPlaceIds,
+                PersonalIdentityCodes = filter.PersonalIdentityCodes,
+                FirstNames = filter.FirstNames,
+                LastNames = filter.LastNames,
+                Genders = filter.Genders,
+                DateOfBirth = filter.DateOfBirth,
+                OriginCountries = filter.OriginCountries,
+                Religions = filter.Religions,
+            };
+
+            var illegalMigrantEntities = await _illegalMigrantEntityService.ListAsync(illegalMigrantEntityFilter, pagination);
+
+            return Ok(illegalMigrantEntities);
+        }
     }
 }

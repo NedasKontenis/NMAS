@@ -9,7 +9,7 @@ namespace NMAS.WebApi.Contracts.AccommodationPlaceEntity
         /// </summary>
         /// <example>1</example>
         [Required]
-        public int WorkerID { get; set; }
+        public int WorkerId { get; set; }
 
         /// <summary>
         ///     Name of accommodation place

@@ -6,6 +6,5 @@ namespace NMAS.WebApi.Host.Controllers
     [Route("v{version:apiVersion}/[controller]")]
     public abstract class ApiControllerBase : ControllerBase
     {
-
     }
 }

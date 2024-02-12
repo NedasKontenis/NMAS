@@ -3,8 +3,8 @@
     public class AccommodationPlaceEntity : ModifiableAccommodationPlaceEntity
     {
         /// <summary>
-        ///     The Accommodation Place Entity id
+        ///     The accommodation place entity id
         /// </summary>
-        public int ID { get; set; }
+        public int Id { get; set; }
     }
 }

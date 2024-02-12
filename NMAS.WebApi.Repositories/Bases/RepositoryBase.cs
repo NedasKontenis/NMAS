@@ -51,14 +51,14 @@ namespace NMAS.WebApi.Repositories.Bases
 
         protected async Task UpdateAsync<T>(IDbConnection db, string tableName, int id, T document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var properties = typeof(T).GetProperties().Where(prop => prop.Name != "ID");
+            var properties = typeof(T).GetProperties().Where(prop => prop.Name != "Id");
             var setClauses = new List<string>();
             foreach (var prop in properties)
             {
                 setClauses.Add($"{prop.Name} = @{prop.Name}");
             }
             var setClause = string.Join(", ", setClauses);
-            var sql = $@"UPDATE {tableName} SET {setClause} WHERE ID = @Id";
+            var sql = $@"UPDATE {tableName} SET {setClause} WHERE Id = @Id";
 
             var parameters = new DynamicParameters();
             foreach (var prop in properties)
@@ -72,7 +72,7 @@ namespace NMAS.WebApi.Repositories.Bases
 
         protected async Task DeleteAsync(IDbConnection db, string tableName, int id, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var sql = $@"DELETE {tableName} WHERE ID = @Id";
+            var sql = $@"DELETE {tableName} WHERE Id = @Id";
 
             await db.ExecuteAsync(sql, new
             {
