@@ -57,7 +57,7 @@ namespace NMAS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //app.UseCorrelationIdMiddleware(); //todo implemnt correcalionIdHandling
+            app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseCors("AllowSpecificOrigin");
             app.UseRouting();

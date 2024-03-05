@@ -25,7 +25,7 @@ namespace NMAS.WebApi.Repositories.Bases
 
         protected async Task<int> InsertAsync(IDbConnection db, string tableName, object document, IDbTransaction transaction = null, int? commandTimeout = null, CommandType? commandType = null)
         {
-            var properties = document.GetType().GetProperties();
+            var properties = document.GetType().GetProperties().Where(prop => prop.Name != "Id");
             var columnNames = string.Join(", ", properties.Select(p => $"[{p.Name}]"));
             var valueNames = string.Join(", ", properties.Select(p => $"@{p.Name}"));
 
