@@ -41,6 +41,17 @@ namespace NMAS
 
             services.ConfigureDependencyInjection(Configuration, Environment);
             services.ConfigureSwagger(Configuration);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "AllowSpecificOrigin",
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:3000")
+                                             .AllowAnyHeader()
+                                             .AllowAnyMethod();
+                                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +59,7 @@ namespace NMAS
         {
             //app.UseCorrelationIdMiddleware(); //todo implemnt correcalionIdHandling
             app.UseMiddleware<CustomExceptionMiddleware>();
+            app.UseCors("AllowSpecificOrigin");
             app.UseRouting();
             app.UseAuthentication();
             app.UseEndpoints(endpoints =>
