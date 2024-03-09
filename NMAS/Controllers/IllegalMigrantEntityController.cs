@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
@@ -25,8 +26,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Creates new illegal migrant entity
         /// </summary>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(IllegalMigrantEntityCreated), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Create([FromBody] CreateIllegalMigrantEntity createIllegalMigrantEntity)
         {
             var illegalMigrantEntityCreated = await _illegalMigrantEntityService.CreateAsync(createIllegalMigrantEntity);
@@ -44,8 +47,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Return details of a single illegal migrant entity
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(IllegalMigrantEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
@@ -58,8 +63,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Updates illegal migrant entity
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateIllegalMigrantEntity updateIllegalMigrantEntity)
         {
@@ -72,8 +79,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Deletes illegal migrant entity
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Delete(int id)
         {
             await _illegalMigrantEntityService.DeleteAsync(id);
@@ -85,8 +94,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Assigns illegal migrant entity to an accommodation place
         /// </summary>
         [HttpPut("{id}/assign")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Assign(int id)
         {
@@ -99,8 +110,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Returns a list of illegal migrant entities
         /// </summary>
         [HttpPost("filter")]
+        [Authorize]
         [ProducesResponseType(typeof(IllegalMigrantEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> List([FromBody] FilterIllegalMigrantEntity filter, [FromQuery] FilterIllegalMigrantEntityPagination pagination)
         {

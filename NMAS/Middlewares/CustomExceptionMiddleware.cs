@@ -34,6 +34,10 @@ namespace NMAS.WebApi.Host.Middlewares
             {
                 await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
             }
+            catch (UnauthorizedException ex)
+            {
+                await HandleExceptionAsync(httpContext, ex, HttpStatusCode.Unauthorized);
+            }
             catch (Exception ex)
             {
                 await HandleExceptionAsync(httpContext, ex, HttpStatusCode.InternalServerError);
