@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
@@ -26,8 +27,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Creates new Accommodation place entity
         /// </summary>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(AccommodationPlaceEntityCreated), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Create([FromBody] CreateAccommodationPlaceEntity createAccommodationPlaceEntity)
         {
             var accommodationPlaceEntityCreated = await _accommodationPlaceEntityService.CreateAsync(createAccommodationPlaceEntity);
@@ -45,8 +48,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Return details of a single Accommodation place entity
         /// </summary>
         [HttpGet("{id}")]
+        [Authorize]
         [ProducesResponseType(typeof(AccommodationPlaceEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
@@ -59,8 +64,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Updates Accommodation place entity
         /// </summary>
         [HttpPut("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateAccommodationPlaceEntity updateAccommodationPlaceEntity)
         {
@@ -73,7 +80,9 @@ namespace NMAS.WebApi.Host.Controllers
         /// Deletes Accommodation place entity
         /// </summary>
         [HttpDelete("{id}")]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
@@ -86,8 +95,10 @@ namespace NMAS.WebApi.Host.Controllers
         /// Returns a list of accommodation place entities
         /// </summary>
         [HttpPost("filter")]
+        [Authorize]
         [ProducesResponseType(typeof(AccommodationPlaceEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> List([FromBody] FilterAccommodationPlaceEntity filter, [FromQuery] FilterAccommodationPlaceEntityPagination pagination)
         {
