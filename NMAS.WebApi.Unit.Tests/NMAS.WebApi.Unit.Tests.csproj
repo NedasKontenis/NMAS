@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NMAS.WebApi.Services\NMAS.WebApi.Services.csproj" />
+    <ProjectReference Include="..\NMAS\NMAS.WebApi.Host.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace NMAS.WebApi.Integration.testss
+namespace NMAS.WebApi.Integration.tests
 {
     [SetUpFixture]
     public abstract class TestBase
