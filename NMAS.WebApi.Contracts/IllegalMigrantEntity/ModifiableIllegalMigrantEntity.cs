@@ -17,6 +17,7 @@ namespace NMAS.WebApi.Contracts.IllegalMigrantEntity
         /// </summary>
         /// <example>50005102662</example>
         [Required]
+        [StringLength(11, ErrorMessage = "The PersonalIdentityCode must not exceed 11 characters.")]
         public string PersonalIdentityCode { get; set; }
 
         /// <summary>

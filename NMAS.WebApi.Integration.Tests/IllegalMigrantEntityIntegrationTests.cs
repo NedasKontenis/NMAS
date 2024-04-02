@@ -3,7 +3,7 @@ using Dapper;
 using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Contracts.WorkerEntity;
-using NMAS.WebApi.Integration.testss;
+using NMAS.WebApi.Integration.tests;
 using NUnit.Framework;
 using System.Data.SqlClient;
 using System.Threading.Tasks;

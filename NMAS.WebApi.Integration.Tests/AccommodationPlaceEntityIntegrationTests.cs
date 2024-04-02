@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
-namespace NMAS.WebApi.Integration.testss
+namespace NMAS.WebApi.Integration.tests
 {
     [TestFixture]
     [Category("Integration")]
