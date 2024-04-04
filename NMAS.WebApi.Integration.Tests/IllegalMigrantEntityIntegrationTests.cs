@@ -5,6 +5,7 @@ using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Contracts.WorkerEntity;
 using NMAS.WebApi.Integration.tests;
 using NUnit.Framework;
+using System;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -33,6 +34,44 @@ namespace NMAS.WebApi.Integration.Tests
                 Assert.AreEqual(migrant.FirstName, result.FirstName);
                 Assert.AreEqual(migrant.LastName, result.LastName);
                 Assert.AreEqual(placeId, result.AccommodationPlaceId);
+
+                transaction.Rollback();
+            }
+        }
+
+        [Test, AutoData]
+        public async Task CreateIllegalMigrantEntity_WithNonExistentAccommodationPlace_ShouldFail(
+            IllegalMigrantEntity migrant,
+            WorkerEntity worker)
+        {
+            using (var transaction = TestsDbConnection.BeginTransaction())
+            {
+                var workerId = await InsertWorkerAsync(worker, transaction);
+                // Intentionally skipping the insertion of an accommodation place to simulate a failure scenario
+                // var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
+                var invalidPlaceId = -1; // Using an obviously invalid ID for accommodation place
+
+                // Attempting to insert an illegal migrant with a non-existent accommodation place ID
+                // This operation should fail, so we do not expect to successfully retrieve an ID for the migrant
+                var migrantId = 0;
+                try
+                {
+                    migrantId = await InsertIllegalMigrantAsync(migrant, invalidPlaceId, transaction);
+                }
+                catch (Exception ex)
+                {
+                    // Expecting an exception due to foreign key constraint violation
+                    Assert.IsInstanceOf<SqlException>(ex);
+                }
+
+                // Verifying that no illegal migrant entity was created
+                if (migrantId != 0)
+                {
+                    var result = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
+                        "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
+
+                    Assert.IsNull(result); // Asserting that no result is found since the insertion should have failed
+                }
 
                 transaction.Rollback();
             }
