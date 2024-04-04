@@ -32,6 +32,11 @@ namespace NMAS.WebApi.Host.Controllers
         [ProducesResponseType(typeof(UnauthorizedResponse), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Create([FromBody] CreateIllegalMigrantEntity createIllegalMigrantEntity)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var illegalMigrantEntityCreated = await _illegalMigrantEntityService.CreateAsync(createIllegalMigrantEntity);
 
             return CreatedAtAction(
