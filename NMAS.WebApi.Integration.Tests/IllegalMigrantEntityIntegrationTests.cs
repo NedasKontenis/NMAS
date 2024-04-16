@@ -99,6 +99,32 @@ namespace NMAS.WebApi.Integration.Tests
                 transaction.Rollback();
             }
         }
+        [Test, AutoData]
+        public async Task UpdateIllegalMigrantEntity_ShouldModifyEntity(
+            IllegalMigrantEntity migrant,
+            WorkerEntity worker,
+            AccommodationPlaceEntity place,
+            string updatedLastName)
+        {
+            using (var transaction = TestsDbConnection.BeginTransaction())
+            {
+                var workerId = await InsertWorkerAsync(worker, transaction);
+                var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
+                var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
+
+                await TestsDbConnection.ExecuteAsync(
+                    "UPDATE IllegalMigrant SET LastName = @UpdatedLastName WHERE Id = @Id;",
+                    new { UpdatedLastName = updatedLastName, Id = migrantId }, transaction: transaction);
+
+                var updatedMigrant = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
+                    "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
+
+                Assert.AreEqual(updatedLastName, updatedMigrant.LastName);
+
+                transaction.Rollback();
+            }
+        }
+
         private async Task<int> InsertWorkerAsync(WorkerEntity worker, SqlTransaction transaction)
         {
             return await TestsDbConnection.ExecuteScalarAsync<int>(
