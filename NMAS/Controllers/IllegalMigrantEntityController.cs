@@ -75,6 +75,10 @@ namespace NMAS.WebApi.Host.Controllers
         [ProducesResponseType(typeof(NotFoundResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateIllegalMigrantEntity updateIllegalMigrantEntity)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             await _illegalMigrantEntityService.UpdateAsync(id, updateIllegalMigrantEntity);
 
             return NoContent();
