@@ -39,6 +39,67 @@ namespace NMAS.WebApi.Integration.Tests
             }
         }
 
+        [Test, AutoData]
+        public async Task DeleteIllegalMigrantEntity_ShouldRemoveEntity(
+           IllegalMigrantEntity migrant,
+           WorkerEntity worker,
+           AccommodationPlaceEntity place)
+        {
+            using (var transaction = TestsDbConnection.BeginTransaction())
+            {
+                var workerId = await InsertWorkerAsync(worker, transaction);
+                var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
+                var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
+
+                await TestsDbConnection.ExecuteAsync(
+                    "DELETE FROM IllegalMigrant WHERE Id = @Id;",
+                    new { Id = migrantId }, transaction: transaction);
+
+                var result = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
+                    "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
+
+                Assert.Null(result);
+
+                transaction.Rollback();
+            }
+        }
+        [Test, AutoData]
+        public async Task DeleteIllegalMigrantEntity_WithNonExistentAccommodationPlace_ShouldFail(
+           IllegalMigrantEntity migrant,
+           WorkerEntity worker,
+           AccommodationPlaceEntity place)
+        {
+            using (var transaction = TestsDbConnection.BeginTransaction())
+            {
+                var workerId = await InsertWorkerAsync(worker, transaction);
+                var placeId = -1;
+                var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
+
+                //Attempting to delete the migrant, but it should fail as placeId / accommodation place is non-existen
+                try
+                { 
+                    await TestsDbConnection.ExecuteAsync(
+                        "DELETE FROM IllegalMigrant WHERE Id = @Id;",
+                        new { Id = migrantId }, transaction: transaction);
+                }
+                catch (Exception ex)
+                {
+                    // Expecting an exception due to foreign key constraint violation
+                    Assert.IsInstanceOf<SqlException>(ex);
+                }
+
+
+                //Checking if migrant still in DB
+                if (migrantId != 0)
+                {
+                    var result = await TestsDbConnection.QuerySingleOrDefaultAsync<IllegalMigrantEntity>(
+                                        "SELECT * FROM IllegalMigrant WHERE Id = @Id;", new { Id = migrantId }, transaction: transaction);
+
+                    Assert.Null(result);
+                }
+                transaction.Rollback();
+            }
+        }
         private async Task<int> InsertWorkerAsync(WorkerEntity worker, SqlTransaction transaction)
         {
             return await TestsDbConnection.ExecuteScalarAsync<int>(
