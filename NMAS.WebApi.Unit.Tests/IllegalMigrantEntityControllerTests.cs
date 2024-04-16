@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
 using NMAS.WebApi.Host.Controllers;
 using NMAS.WebApi.Services.IllegalMigrantEntity;
@@ -101,5 +102,24 @@ namespace NMAS.WebApi.Unit.Tests
             Assert.IsType<BadRequestObjectResult>(response);
             serviceMock.Verify(x => x.CreateAsync(It.IsAny<CreateIllegalMigrantEntity>()), Times.Never); // Ensure service is not called
         }
+
+        [Theory, AutoData]
+        public async Task DeleteById_Returns204NoContent_WhenMigrantExists(int resourceId, IllegalMigrantEntity illegalMigrantEntity)
+        {
+            // Arrange
+            illegalMigrantEntity.Id = resourceId;
+            var mockService = new Mock<IIllegalMigrantEntityService>();
+            mockService.Setup(service => service.DeleteAsync(resourceId)).Returns(Task.FromResult(true));
+            var controller = new IllegalMigrantEntityController(mockService.Object);
+
+            // Act
+            var result = await controller.Delete(resourceId);
+
+            // Assert
+            var noContentResult = Assert.IsType<NoContentResult>(result);
+            Assert.Equal(204, noContentResult.StatusCode);
+            mockService.Verify(service => service.DeleteAsync(resourceId), Times.Once);
+        }
+
     }
 }

@@ -1,10 +1,12 @@
 ﻿using AutoFixture.Xunit2;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities.Resources;
 using Moq;
 using NMAS.WebApi.Contracts.AccommodationPlaceEntity;
 using NMAS.WebApi.Contracts.Enums;
 using NMAS.WebApi.Contracts.Exceptions;
 using NMAS.WebApi.Contracts.IllegalMigrantEntity;
+using NMAS.WebApi.Host.Controllers;
 using NMAS.WebApi.Repositories.IllegalMigrantEntity;
 using NMAS.WebApi.Repositories.Models.IllegalMigrantEntity;
 using NMAS.WebApi.Services.AccommodationPlaceEntityService;
@@ -178,6 +180,22 @@ namespace NMAS.WebApi.Unit.tests
             // Assert
             _mockAccommodationPlaceEntityService.Verify(service => service.DecrementUsedAccommodationCapacity(illegalMigrantEntityDocument.AccommodationPlaceId.Value), Times.Once);
             _mockIllegalMigrantEntityRepository.Verify(repo => repo.DeleteAsync(resourceId), Times.Once);
+        }
+
+        [Theory, AutoData]
+        public async Task DeleteAsync_ShouldThrowResourceNotFoundException_WhenEntityDoesNotExist(
+            int resourceId,
+            [Frozen] Mock<IIllegalMigrantEntityRepository> mockRepository,
+            [Frozen] Mock<IAccommodationPlaceEntityService> mockAccommodationPlaceEntityService)
+        {
+            // Arrange
+            mockRepository.Setup(repo => repo.GetAsync(resourceId))
+                .ReturnsAsync((IllegalMigrantEntityDocument)null);
+
+            var service = new IllegalMigrantEntityService(mockRepository.Object, mockAccommodationPlaceEntityService.Object);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<ResourceNotFoundException>(() => service.DeleteAsync(resourceId));
         }
 
         [Theory, AutoData]
