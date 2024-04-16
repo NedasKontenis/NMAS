@@ -34,6 +34,7 @@ namespace NMAS.WebApi.Host.Controllers
         public async Task<IActionResult> Get(int id)
         {
             var workerEntity = 1;
+
             return Ok(workerEntity);
         }
 
