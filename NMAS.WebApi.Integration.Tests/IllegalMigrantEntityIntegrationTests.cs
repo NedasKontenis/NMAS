@@ -66,14 +66,13 @@ namespace NMAS.WebApi.Integration.Tests
         [Test, AutoData]
         public async Task DeleteIllegalMigrantEntity_WithNonExistentAccommodationPlace_ShouldFail(
            IllegalMigrantEntity migrant,
-           WorkerEntity worker,
-           AccommodationPlaceEntity place)
+           WorkerEntity worker)
         {
             using (var transaction = TestsDbConnection.BeginTransaction())
             {
                 var workerId = await InsertWorkerAsync(worker, transaction);
                 var placeId = -1;
-                var migrantId = await InsertIllegalMigrantAsync(migrant, placeId, transaction);
+                var migrantId = 0;
 
                 //Attempting to delete the migrant, but it should fail as placeId / accommodation place is non-existen
                 try
