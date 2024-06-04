@@ -34,6 +34,29 @@ namespace NMAS.WebApi.Integration.tests
                 transaction.Rollback();
             }
         }
+        [Test, AutoData]
+        public async Task UpdateAccommodationPlaceEntity_ShouldModifyEntity(
+          AccommodationPlaceEntity place,
+          WorkerEntity worker,
+          string placeName)
+        {
+            using (var transaction = TestsDbConnection.BeginTransaction())
+            {
+                var workerId = await InsertWorkerAsync(worker, transaction);
+                var placeId = await InsertAccommodationPlaceAsync(place, workerId, transaction);
+
+                await TestsDbConnection.ExecuteAsync(
+                    "UPDATE AccommodationPlace SET PlaceName = @PlaceName WHERE Id = @Id;",
+                    new { PlaceName = placeName, Id = placeId }, transaction: transaction);
+
+                var updatedEntity = await TestsDbConnection.QuerySingleOrDefaultAsync<AccommodationPlaceEntity>(
+                    "SELECT * FROM AccommodationPlace WHERE Id = @Id;", new { Id = placeId }, transaction: transaction);
+
+                Assert.AreEqual(placeName, updatedEntity.PlaceName);
+
+                transaction.Rollback();
+            }
+        }
 
         private async Task<int> InsertWorkerAsync(WorkerEntity worker, SqlTransaction transaction)
         {
