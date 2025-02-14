@@ -1,1 +1,1 @@
-NMAS repo
+NMAS (nelegaliu migrantu apgyvendinimo sistema) RestFul WEB API is designed for 2021 year illegal migrant crisis that happened in lithuania. Application is designed for goverment institutions that works with illegal migrant accomodation places.
